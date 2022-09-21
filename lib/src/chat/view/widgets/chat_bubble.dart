@@ -26,14 +26,16 @@ class ChatBubble extends StatelessWidget {
               alignment: Alignment.center,
               transform: Matrix4.rotationY(pi),
               child: CustomPaint(
-                painter: BubblePoint(Colors.grey.shade300),
+                painter: BubblePoint(Colors.orange.shade300),
               ),
             ),
           Flexible(
             child: Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: isMyChat ? Colors.blue.shade100 : Colors.grey.shade300,
+                color: isMyChat
+                    ? Colors.deepPurple.shade100
+                    : Colors.orange.shade300,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(isMyChat ? 18 : 0),
                   topRight: Radius.circular(isMyChat ? 0 : 18),
@@ -43,7 +45,7 @@ class ChatBubble extends StatelessWidget {
               ),
               child: Text(
                 text,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                 ),
               ),
@@ -52,7 +54,7 @@ class ChatBubble extends StatelessWidget {
           if (isMyChat)
             CustomPaint(
               painter: BubblePoint(
-                Colors.blue.shade100,
+                Colors.deepPurple.shade100,
               ),
             ),
         ],

@@ -1,60 +1,46 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
+import 'package:voice_chat/app/injector/injector.dart';
+import 'package:voice_chat/src/chat/bloc/chat_bloc.dart';
 import 'package:voice_chat/src/chat/view/widgets/chat_tile.dart';
 
-class ChatView extends StatefulWidget {
+class ChatView extends StatelessWidget {
   const ChatView({super.key});
 
   @override
-  State<ChatView> createState() => _ChatViewState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt<ChatBloc>()..add(SpeechInitialized()),
+      child: const ChatPage(),
+    );
+  }
 }
 
-class _ChatViewState extends State<ChatView> {
+class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
   late ScrollController _controller;
-  SpeechToText _speechToText = SpeechToText();
-  bool _speechEnabled = false;
-  String _lastWords = '';
+  late TextEditingController _textController;
 
   @override
   void initState() {
     super.initState();
-    _initSpeech();
     _controller = ScrollController();
-  }
-
-  /// This has to happen only once per app
-  void _initSpeech() async {
-    _speechEnabled = await _speechToText.initialize();
-    setState(() {});
-  }
-
-  /// Each time to start a speech recognition session
-  void _startListening() async {
-    await _speechToText.listen(onResult: _onSpeechResult);
-    setState(() {});
-  }
-
-  /// Manually stop the active speech recognition session
-  /// Note that there are also timeouts that each platform enforces
-  /// and the SpeechToText plugin supports setting timeouts on the
-  /// listen method.
-  void _stopListening() async {
-    await _speechToText.stop();
-    setState(() {});
-  }
-
-  /// This is the callback that the SpeechToText plugin calls when
-  /// the platform returns recognized words.
-  void _onSpeechResult(SpeechRecognitionResult result) {
-    setState(() {
-      _lastWords = result.recognizedWords;
-    });
+    _textController = TextEditingController();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _textController.dispose();
     super.dispose();
   }
 
@@ -64,66 +50,147 @@ class _ChatViewState extends State<ChatView> {
       appBar: AppBar(
         title: const Text('Chat'),
       ),
-      body: ListView.builder(
-        controller: _controller,
-        reverse: true,
-        itemCount: 17,
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(8),
-        itemBuilder: (context, index) => ChatTile(
-          isMyChat: index.isOdd,
-          text: _lastWords,
-        ),
-      ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text(
-                'Person A',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.blue,
-                ),
-              ),
-              InkWell(
-                borderRadius: BorderRadius.circular(100),
-                onTap: _speechToText.isNotListening
-                    ? _startListening
-                    : _stopListening,
-                child: Card(
-                  margin: EdgeInsets.zero,
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  color: Theme.of(context).primaryColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Icon(
-                      _speechToText.isNotListening ? Icons.mic_off : Icons.mic,
-                      size: 24,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              const Text(
-                'Person B',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.orange,
-                ),
-              ),
-            ],
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<ChatBloc, ChatState>(
+            listenWhen: (p, c) => p.currentText != c.currentText,
+            listener: (context, state) {
+              _textController.text = state.currentText;
+            },
           ),
-          const SizedBox(
-            height: 16,
+          BlocListener<ChatBloc, ChatState>(
+            listenWhen: (p, c) => p.conversation != c.conversation,
+            listener: (context, state) {
+              if (!_controller.hasClients) return;
+
+              if (_controller.offset < _controller.position.maxScrollExtent) {
+                final bottomOffset = _controller.position.maxScrollExtent +
+                    kBottomNavigationBarHeight;
+                _controller.animateTo(
+                  bottomOffset,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.ease,
+                );
+              }
+            },
           ),
         ],
+        child: BlocBuilder<ChatBloc, ChatState>(
+          builder: (context, state) {
+            return ListView.builder(
+              controller: _controller,
+              itemCount: state.conversation.chats.length,
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(8),
+              itemBuilder: (context, index) {
+                final chat = state.conversation.chats[index];
+                return ChatTile(
+                  isMyChat: chat.isMyChat,
+                  text: chat.text,
+                );
+              },
+            );
+          },
+        ),
+      ),
+      bottomNavigationBar: BlocBuilder<ChatBloc, ChatState>(
+        builder: (context, state) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: state.isListening
+                          ? TextField(
+                              controller: _textController,
+                              decoration: InputDecoration(
+                                hintText:
+                                    '${state.isMyChat ? 'Thor' : 'Loki'} is Speaking',
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                              ),
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  state.isMyChat ? 'Thor' : 'Loki',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: state.isMyChat
+                                        ? Colors.deepPurple
+                                        : Colors.orange,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                const Text(
+                                  'Tap mic to speak',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                    BlocBuilder<ChatBloc, ChatState>(
+                      builder: (context, state) {
+                        return state.isListening
+                            ? Lottie.asset(
+                                'assets/lottie/wave.json',
+                                height: 60,
+                              )
+                            : InkWell(
+                                borderRadius: BorderRadius.circular(100),
+                                onTap: () {
+                                  if (state.isListening) {
+                                    context
+                                        .read<ChatBloc>()
+                                        .add(ListeningEnded());
+                                  } else {
+                                    context
+                                        .read<ChatBloc>()
+                                        .add(ListeningStarted());
+                                  }
+                                },
+                                child: Card(
+                                  margin: EdgeInsets.zero,
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  color: state.isMyChat
+                                      ? Colors.deepPurple
+                                      : Colors.orange,
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Icon(
+                                      Icons.mic,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+            ],
+          );
+        },
       ),
     );
   }
