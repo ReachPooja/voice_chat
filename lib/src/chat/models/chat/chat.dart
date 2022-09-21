@@ -36,6 +36,7 @@ class Chat extends Equatable {
 
   @override
   String toString() {
-    return 'Chat(id: $id, text: $text, dateTime: $dateTime, isMyChat: $isMyChat)';
+    return 'Chat(id: $id, text: $text, dateTime:'
+        ' $dateTime, isMyChat: $isMyChat)';
   }
 }

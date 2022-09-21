@@ -29,9 +29,22 @@ class Conversation extends Equatable {
   final List<Chat> chats;
 
   static const empty = Conversation();
+  bool get isEmpty => this == empty;
 
   @override
   List<Object> get props => [id, dateTime, chats];
+
+  Conversation copyWith({
+    String? id,
+    int? dateTime,
+    List<Chat>? chats,
+  }) {
+    return Conversation(
+      id: id ?? this.id,
+      dateTime: dateTime ?? this.dateTime,
+      chats: chats ?? this.chats,
+    );
+  }
 
   @override
   String toString() =>
