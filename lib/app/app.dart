@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voice_chat/src/home/home_view.dart';
+import 'package:voice_chat/src/home/view/home_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
