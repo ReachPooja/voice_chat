@@ -7,6 +7,28 @@ abstract class ChatEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ListeningInitialized extends ChatEvent {}
-class ListeningStarted extends ChatEvent{}
-class ListeningEnded extends ChatEvent{}
+class SpeechInitialized extends ChatEvent {}
+
+class IsListeningChanged extends ChatEvent {}
+
+class ListeningStarted extends ChatEvent {}
+
+class _ListeningCompleted extends ChatEvent {
+  const _ListeningCompleted(this.text);
+
+  final String text;
+
+  @override
+  List<Object> get props => [text];
+}
+
+class _CurrentTextChanged extends ChatEvent {
+  const _CurrentTextChanged(this.text);
+
+  final String text;
+
+  @override
+  List<Object> get props => [text];
+}
+
+class ListeningEnded extends ChatEvent {}
