@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -17,18 +19,20 @@ class SpeechRepository implements ISpeechRepository {
   bool isListening() => _speechToText.isListening;
 
   @override
-  Future<Either<Failure, String>> listen() async {
+  Future<Either<Failure, Unit>> listen({
+    required void Function(String) onResult,
+  }) async {
     try {
-      var text = '';
       await _speechToText.listen(
         onResult: (result) {
-          text = result.recognizedWords;
+          onResult(result.recognizedWords);
         },
       );
-      return right(text);
+
+      return right(unit);
     } on SpeechToTextNotInitializedException catch (_) {
       return left(
-        const Failure.value('SpeechToText is not initialized'),
+        const Failure.value('not-initialized'),
       );
     } on ListenFailedException catch (e) {
       return left(
