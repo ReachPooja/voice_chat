@@ -8,6 +8,10 @@ class Failure with _$Failure implements Exception {
     String? message,
   ) = _Value;
 
+  const factory Failure.error(
+    String? message,
+  ) = _Error;
+
   const factory Failure.unexpected(
     String? message,
   ) = _Unexpected;

@@ -20,18 +20,21 @@ mixin _$Failure {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? message) value,
+    required TResult Function(String? message) error,
     required TResult Function(String? message) unexpected,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function(String? message)? value,
+    TResult Function(String? message)? error,
     TResult Function(String? message)? unexpected,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? message)? value,
+    TResult Function(String? message)? error,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) =>
@@ -39,18 +42,21 @@ mixin _$Failure {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Value value) value,
+    required TResult Function(_Error value) error,
     required TResult Function(_Unexpected value) unexpected,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Value value)? value,
+    TResult Function(_Error value)? error,
     TResult Function(_Unexpected value)? unexpected,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Value value)? value,
+    TResult Function(_Error value)? error,
     TResult Function(_Unexpected value)? unexpected,
     required TResult orElse(),
   }) =>
@@ -152,6 +158,7 @@ class _$_Value implements _Value {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? message) value,
+    required TResult Function(String? message) error,
     required TResult Function(String? message) unexpected,
   }) {
     return value(message);
@@ -161,6 +168,7 @@ class _$_Value implements _Value {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function(String? message)? value,
+    TResult Function(String? message)? error,
     TResult Function(String? message)? unexpected,
   }) {
     return value?.call(message);
@@ -170,6 +178,7 @@ class _$_Value implements _Value {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? message)? value,
+    TResult Function(String? message)? error,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -183,6 +192,7 @@ class _$_Value implements _Value {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Value value) value,
+    required TResult Function(_Error value) error,
     required TResult Function(_Unexpected value) unexpected,
   }) {
     return value(this);
@@ -192,6 +202,7 @@ class _$_Value implements _Value {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Value value)? value,
+    TResult Function(_Error value)? error,
     TResult Function(_Unexpected value)? unexpected,
   }) {
     return value?.call(this);
@@ -201,6 +212,7 @@ class _$_Value implements _Value {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Value value)? value,
+    TResult Function(_Error value)? error,
     TResult Function(_Unexpected value)? unexpected,
     required TResult orElse(),
   }) {
@@ -219,6 +231,146 @@ abstract class _Value implements Failure {
   @override
   @JsonKey(ignore: true)
   _$$_ValueCopyWith<_$_Value> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_ErrorCopyWith<$Res> implements $FailureCopyWith<$Res> {
+  factory _$$_ErrorCopyWith(_$_Error value, $Res Function(_$_Error) then) =
+      __$$_ErrorCopyWithImpl<$Res>;
+  @override
+  $Res call({String? message});
+}
+
+/// @nodoc
+class __$$_ErrorCopyWithImpl<$Res> extends _$FailureCopyWithImpl<$Res>
+    implements _$$_ErrorCopyWith<$Res> {
+  __$$_ErrorCopyWithImpl(_$_Error _value, $Res Function(_$_Error) _then)
+      : super(_value, (v) => _then(v as _$_Error));
+
+  @override
+  _$_Error get _value => super._value as _$_Error;
+
+  @override
+  $Res call({
+    Object? message = freezed,
+  }) {
+    return _then(_$_Error(
+      message == freezed
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_Error implements _Error {
+  const _$_Error(this.message);
+
+  @override
+  final String? message;
+
+  @override
+  String toString() {
+    return 'Failure.error(message: $message)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_Error &&
+            const DeepCollectionEquality().equals(other.message, message));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(message));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_ErrorCopyWith<_$_Error> get copyWith =>
+      __$$_ErrorCopyWithImpl<_$_Error>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? message) value,
+    required TResult Function(String? message) error,
+    required TResult Function(String? message) unexpected,
+  }) {
+    return error(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(String? message)? value,
+    TResult Function(String? message)? error,
+    TResult Function(String? message)? unexpected,
+  }) {
+    return error?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? message)? value,
+    TResult Function(String? message)? error,
+    TResult Function(String? message)? unexpected,
+    required TResult orElse(),
+  }) {
+    if (error != null) {
+      return error(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Value value) value,
+    required TResult Function(_Error value) error,
+    required TResult Function(_Unexpected value) unexpected,
+  }) {
+    return error(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_Value value)? value,
+    TResult Function(_Error value)? error,
+    TResult Function(_Unexpected value)? unexpected,
+  }) {
+    return error?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Value value)? value,
+    TResult Function(_Error value)? error,
+    TResult Function(_Unexpected value)? unexpected,
+    required TResult orElse(),
+  }) {
+    if (error != null) {
+      return error(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Error implements Failure {
+  const factory _Error(final String? message) = _$_Error;
+
+  @override
+  String? get message;
+  @override
+  @JsonKey(ignore: true)
+  _$$_ErrorCopyWith<_$_Error> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -288,6 +440,7 @@ class _$_Unexpected implements _Unexpected {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? message) value,
+    required TResult Function(String? message) error,
     required TResult Function(String? message) unexpected,
   }) {
     return unexpected(message);
@@ -297,6 +450,7 @@ class _$_Unexpected implements _Unexpected {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function(String? message)? value,
+    TResult Function(String? message)? error,
     TResult Function(String? message)? unexpected,
   }) {
     return unexpected?.call(message);
@@ -306,6 +460,7 @@ class _$_Unexpected implements _Unexpected {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? message)? value,
+    TResult Function(String? message)? error,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -319,6 +474,7 @@ class _$_Unexpected implements _Unexpected {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Value value) value,
+    required TResult Function(_Error value) error,
     required TResult Function(_Unexpected value) unexpected,
   }) {
     return unexpected(this);
@@ -328,6 +484,7 @@ class _$_Unexpected implements _Unexpected {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Value value)? value,
+    TResult Function(_Error value)? error,
     TResult Function(_Unexpected value)? unexpected,
   }) {
     return unexpected?.call(this);
@@ -337,6 +494,7 @@ class _$_Unexpected implements _Unexpected {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Value value)? value,
+    TResult Function(_Error value)? error,
     TResult Function(_Unexpected value)? unexpected,
     required TResult orElse(),
   }) {
