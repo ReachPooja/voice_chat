@@ -28,6 +28,8 @@ class Conversation extends Equatable {
   @HiveField(2)
   final List<Chat> chats;
 
+  static const empty = Conversation();
+
   @override
   List<Object> get props => [id, dateTime, chats];
 
