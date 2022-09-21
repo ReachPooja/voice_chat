@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
 import 'package:voice_chat/src/chat/models/chat/chat.dart';
 import 'package:voice_chat/src/chat/models/conversation/conversation.dart';
+import 'package:voice_chat/src/chat/repository/chat/i_chat_repository.dart';
 import 'package:voice_chat/src/chat/repository/speech/i_speech_repository.dart';
 import 'package:voice_chat/src/core/application/event_transformers/debounce_restartable.dart';
 import 'package:voice_chat/src/core/domain/failures/failures.dart';
@@ -16,7 +17,8 @@ part 'chat_state.dart';
 
 @injectable
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-  ChatBloc(this._speechRepository) : super(const ChatState()) {
+  ChatBloc(this._speechRepository, this._chatRepository)
+      : super(const ChatState()) {
     on<SpeechInitialized>(_onSpeechInitialized);
     on<IsListeningChanged>(_onIsListeningChecked);
     on<ListeningStarted>(_onListeningStarted);
@@ -29,6 +31,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   final ISpeechRepository _speechRepository;
+  final IChatRepository _chatRepository;
 
   Future<void> _onSpeechInitialized(
     SpeechInitialized event,
@@ -130,6 +133,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           currentText: '',
         ),
       );
+
+      _chatRepository.saveConversation(state.conversation);
 
       add(IsListeningChanged());
       add(ListeningEnded());
