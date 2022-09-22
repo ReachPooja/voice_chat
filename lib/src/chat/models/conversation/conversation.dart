@@ -6,7 +6,7 @@ import 'package:voice_chat/src/chat/models/chat/chat.dart';
 
 part 'conversation.g.dart';
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 1)
 @JsonSerializable()
 class Conversation extends Equatable {
   const Conversation({

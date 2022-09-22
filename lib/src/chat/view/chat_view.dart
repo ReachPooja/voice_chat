@@ -1,19 +1,26 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+
 import 'package:voice_chat/app/injector/injector.dart';
 import 'package:voice_chat/src/chat/bloc/chat_bloc.dart';
+import 'package:voice_chat/src/chat/models/conversation/conversation.dart';
 import 'package:voice_chat/src/chat/view/widgets/chat_tile.dart';
 
 class ChatView extends StatelessWidget {
-  const ChatView({super.key});
+  const ChatView({
+    super.key,
+    this.conversation = Conversation.empty,
+  });
+
+  final Conversation conversation;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<ChatBloc>()..add(SpeechInitialized()),
+      create: (context) => getIt<ChatBloc>()
+        ..add(ConversationAdded(conversation))
+        ..add(SpeechInitialized()),
       child: const ChatPage(),
     );
   }
@@ -85,8 +92,7 @@ class _ChatPageState extends State<ChatPage> {
               itemBuilder: (context, index) {
                 final chat = state.conversation.chats[index];
                 return ChatTile(
-                  isMyChat: chat.isMyChat,
-                  text: chat.text,
+                  chat: chat,
                 );
               },
             );

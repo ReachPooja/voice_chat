@@ -31,6 +31,10 @@ class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
         ),
       ),
     );
+
+    if (state.hasData!) {
+      add(DataRequested());
+    }
   }
 
   Future<void> _onDataRequested(
@@ -41,10 +45,15 @@ class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
     emit(
       result.fold(
         (f) => state.copyWith(historyStatus: Status.failure(f)),
-        (convo) => state.copyWith(
-          historyStatus: const Status.success(),
-          conversations: convo,
-        ),
+        (convo) {
+          convo.sort(
+            (a, b) => b.dateTime.compareTo(a.dateTime),
+          );
+          return state.copyWith(
+            historyStatus: const Status.success(),
+            conversations: convo,
+          );
+        },
       ),
     );
   }

@@ -28,6 +28,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     );
     on<ListeningEnded>(_onListeningEnded);
     on<_CurrentTextChanged>(_onCurrentTextChanged);
+    on<ConversationAdded>(_onConversationAdded);
   }
 
   final ISpeechRepository _speechRepository;
@@ -156,6 +157,18 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(
       state.copyWith(
         currentText: event.text,
+      ),
+    );
+  }
+
+  void _onConversationAdded(
+    ConversationAdded event,
+    Emitter<ChatState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        conversation: event.conversation,
+        isMyChat: !event.conversation.chats.last.isMyChat,
       ),
     );
   }

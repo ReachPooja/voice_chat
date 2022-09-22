@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:voice_chat/src/chat/models/chat/chat.dart';
 import 'package:voice_chat/src/chat/view/widgets/chat_bubble.dart';
 
 class ChatTile extends StatelessWidget {
   const ChatTile({
     super.key,
-    this.isMyChat = true,
-    this.text = '',
+    required this.chat,
   });
 
-  final bool isMyChat;
-  final String text;
+  final Chat chat;
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +16,16 @@ class ChatTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment:
-            isMyChat ? MainAxisAlignment.end : MainAxisAlignment.start,
+            chat.isMyChat ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          if (isMyChat)
+          if (chat.isMyChat)
             const SizedBox(
               width: 20,
             ),
           ChatBubble(
-            isMyChat: isMyChat,
-            text: text,
+            chat: chat,
           ),
-          if (!isMyChat)
+          if (!chat.isMyChat)
             const SizedBox(
               width: 20,
             ),

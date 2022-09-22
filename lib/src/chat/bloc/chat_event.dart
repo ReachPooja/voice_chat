@@ -32,3 +32,12 @@ class _CurrentTextChanged extends ChatEvent {
 }
 
 class ListeningEnded extends ChatEvent {}
+
+class ConversationAdded extends ChatEvent {
+  const ConversationAdded(this.conversation);
+
+  final Conversation conversation;
+
+  @override
+  List<Object> get props => [conversation];
+}

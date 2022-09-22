@@ -1,17 +1,17 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:voice_chat/src/chat/models/chat/chat.dart';
 import 'package:voice_chat/src/chat/view/widgets/bubble_point.dart';
+import 'package:voice_chat/src/home/view/home_view.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
     super.key,
-    required this.isMyChat,
-    required this.text,
+    required this.chat,
   });
 
-  final bool isMyChat;
-  final String text;
+  final Chat chat;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class ChatBubble extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!isMyChat)
+          if (!chat.isMyChat)
             Transform(
               alignment: Alignment.center,
               transform: Matrix4.rotationY(pi),
@@ -33,25 +33,40 @@ class ChatBubble extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: isMyChat
+                color: chat.isMyChat
                     ? Colors.deepPurple.shade100
                     : Colors.orange.shade300,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(isMyChat ? 18 : 0),
-                  topRight: Radius.circular(isMyChat ? 0 : 18),
+                  topLeft: Radius.circular(chat.isMyChat ? 18 : 0),
+                  topRight: Radius.circular(chat.isMyChat ? 0 : 18),
                   bottomLeft: const Radius.circular(18),
                   bottomRight: const Radius.circular(18),
                 ),
               ),
-              child: Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                crossAxisAlignment: WrapCrossAlignment.end,
+                alignment: WrapAlignment.end,
+                children: [
+                  Text(
+                    chat.text,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    dateFormatter(chat.dateTime),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          if (isMyChat)
+          if (chat.isMyChat)
             CustomPaint(
               painter: BubblePoint(
                 Colors.deepPurple.shade100,
