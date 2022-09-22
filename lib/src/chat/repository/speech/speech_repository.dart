@@ -24,6 +24,7 @@ class SpeechRepository implements ISpeechRepository {
   }) async {
     try {
       await _speechToText.listen(
+        pauseFor: const Duration(seconds: 3),
         onResult: (result) {
           onResult(result.recognizedWords);
         },

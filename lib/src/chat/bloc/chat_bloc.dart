@@ -60,6 +60,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(
       state.copyWith(
         speechStatus: const Status.loading(),
+        isListening: true,
       ),
     );
 
@@ -67,6 +68,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       onResult: (text) {
         add(_CurrentTextChanged(text));
         add(_ListeningCompleted(text));
+        add(IsListeningChanged());
+      },
+    );
+
+    await Future.delayed(
+      const Duration(seconds: 3),
+      () {
         add(IsListeningChanged());
       },
     );
