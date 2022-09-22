@@ -19,35 +19,17 @@ class ChatView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          getIt<ChatBloc>()..add(ConversationAdded(conversation)),
+      create: (context) => getIt<ChatBloc>()
+        ..add(
+          ConversationAdded(conversation),
+        ),
       child: const _ChatPage(),
     );
   }
 }
 
-class _ChatPage extends StatefulWidget {
+class _ChatPage extends StatelessWidget {
   const _ChatPage();
-
-  @override
-  State<_ChatPage> createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<_ChatPage> {
-  late ScrollController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = ScrollController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +62,6 @@ class _ChatPageState extends State<_ChatPage> {
           }
 
           return ListView.builder(
-            controller: _controller,
             reverse: true,
             shrinkWrap: true,
             itemCount: state.conversation.chats.length,
