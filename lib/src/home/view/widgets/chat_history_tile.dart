@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voice_chat/src/chat/models/conversation/conversation.dart';
 import 'package:voice_chat/src/chat/view/chat_view.dart';
 import 'package:voice_chat/src/core/domain/helpers/date_formatter.dart';
+import 'package:voice_chat/src/core/presentation/styles/colors.dart';
 import 'package:voice_chat/src/home/bloc/chat_history_bloc.dart';
 import 'package:voice_chat/src/home/view/widgets/delete_conversation_dialog.dart';
 
@@ -50,6 +51,9 @@ class ChatHistoryTile extends StatelessWidget {
       subtitle: Text(
         dateFormatter(
           conversation.dateTime,
+        ),
+        style: const TextStyle(
+          color: AppColors.secondaryFontColor,
         ),
       ),
       trailing: IconButton(

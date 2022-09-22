@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_chat/src/chat/models/chat/chat.dart';
 import 'package:voice_chat/src/chat/view/widgets/bubble_point.dart';
 import 'package:voice_chat/src/core/domain/helpers/date_formatter.dart';
+import 'package:voice_chat/src/core/presentation/styles/colors.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
@@ -26,7 +27,7 @@ class ChatBubble extends StatelessWidget {
               alignment: Alignment.center,
               transform: Matrix4.rotationY(pi),
               child: CustomPaint(
-                painter: BubblePoint(Colors.orange.shade300),
+                painter: BubblePoint(AppColors.personBLightColor),
               ),
             ),
           Flexible(
@@ -34,8 +35,8 @@ class ChatBubble extends StatelessWidget {
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: chat.isMyChat
-                    ? Colors.deepPurple.shade100
-                    : Colors.orange.shade300,
+                    ? AppColors.personALightColor
+                    : AppColors.personBLightColor,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(chat.isMyChat ? 18 : 0),
                   topRight: Radius.circular(chat.isMyChat ? 0 : 18),
@@ -59,7 +60,7 @@ class ChatBubble extends StatelessWidget {
                     dateFormatter(chat.dateTime),
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade600,
+                      color: AppColors.tertiaryFontColor,
                     ),
                   ),
                 ],
@@ -69,7 +70,7 @@ class ChatBubble extends StatelessWidget {
           if (chat.isMyChat)
             CustomPaint(
               painter: BubblePoint(
-                Colors.deepPurple.shade100,
+                AppColors.personALightColor,
               ),
             ),
         ],
