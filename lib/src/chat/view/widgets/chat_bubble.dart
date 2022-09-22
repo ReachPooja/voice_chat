@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:voice_chat/src/chat/models/chat/chat.dart';
 import 'package:voice_chat/src/chat/view/widgets/bubble_point.dart';
-import 'package:voice_chat/src/home/view/home_view.dart';
+import 'package:voice_chat/src/core/domain/helpers/date_formatter.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({

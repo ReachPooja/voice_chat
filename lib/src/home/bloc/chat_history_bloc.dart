@@ -15,6 +15,7 @@ class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
   ChatHistoryBloc(this._chatRepository) : super(const ChatHistoryState()) {
     on<DataChecked>(_onDataChecked);
     on<DataRequested>(_onDataRequested);
+    on<ConversationDeleted>(_onConversationDeleted);
   }
 
   final IChatRepository _chatRepository;
@@ -34,6 +35,12 @@ class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
 
     if (state.hasData!) {
       add(DataRequested());
+    } else {
+      emit(
+        state.copyWith(
+          historyStatus: const Status.success(),
+        ),
+      );
     }
   }
 
@@ -41,7 +48,14 @@ class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
     DataRequested event,
     Emitter<ChatHistoryState> emit,
   ) async {
+    emit(
+      state.copyWith(
+        historyStatus: const Status.loading(),
+      ),
+    );
+
     final result = await _chatRepository.getConversation();
+    
     emit(
       result.fold(
         (f) => state.copyWith(historyStatus: Status.failure(f)),
@@ -56,5 +70,13 @@ class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
         },
       ),
     );
+  }
+
+  Future<void> _onConversationDeleted(
+    ConversationDeleted event,
+    Emitter<ChatHistoryState> emit,
+  ) async {
+    await _chatRepository.deleteConversation(event.id);
+    add(DataRequested());
   }
 }

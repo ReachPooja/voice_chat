@@ -6,4 +6,5 @@ abstract class IChatRepository {
   Future<Either<Failure, bool>> hasData();
   Future<Either<Failure, Unit>> saveConversation(Conversation conversation);
   Future<Either<Failure, List<Conversation>>> getConversation();
+  Future<void> deleteConversation(String id);
 }

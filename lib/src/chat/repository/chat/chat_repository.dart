@@ -54,4 +54,10 @@ class ChatRepository extends IChatRepository {
       );
     }
   }
+
+  @override
+  Future<void> deleteConversation(String id) async {
+    final box = Hive.box<Conversation>(chatBox);
+    await box.delete(id);
+  }
 }

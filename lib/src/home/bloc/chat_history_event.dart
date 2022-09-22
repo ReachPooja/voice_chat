@@ -10,3 +10,12 @@ abstract class ChatHistoryEvent extends Equatable {
 class DataChecked extends ChatHistoryEvent {}
 
 class DataRequested extends ChatHistoryEvent {}
+
+class ConversationDeleted extends ChatHistoryEvent {
+  const ConversationDeleted(this.id);
+
+  final String id;
+
+  @override
+  List<Object> get props => [id];
+}

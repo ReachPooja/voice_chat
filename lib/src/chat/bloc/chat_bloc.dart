@@ -176,7 +176,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(
       state.copyWith(
         conversation: event.conversation,
-        isMyChat: !event.conversation.chats.last.isMyChat,
+        isMyChat: event.conversation.chats.isEmpty ||
+            !event.conversation.chats.last.isMyChat,
       ),
     );
   }
