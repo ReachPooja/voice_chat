@@ -4,6 +4,7 @@ import 'package:voice_chat/src/chat/models/conversation/conversation.dart';
 import 'package:voice_chat/src/chat/view/chat_view.dart';
 import 'package:voice_chat/src/core/domain/helpers/date_formatter.dart';
 import 'package:voice_chat/src/home/bloc/chat_history_bloc.dart';
+import 'package:voice_chat/src/home/view/widgets/delete_conversation_dialog.dart';
 
 class ChatHistoryTile extends StatelessWidget {
   const ChatHistoryTile({
@@ -53,11 +54,10 @@ class ChatHistoryTile extends StatelessWidget {
       ),
       trailing: IconButton(
         onPressed: () {
-          context.read<ChatHistoryBloc>().add(
-                ConversationDeleted(
-                  conversation.id,
-                ),
-              );
+          showDeleteConversationDialog(
+            context,
+            conversationId: conversation.id,
+          );
         },
         icon: const Icon(
           Icons.delete_outline_rounded,
