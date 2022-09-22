@@ -114,8 +114,8 @@ class _ChatPageState extends State<ChatPage> {
                           ? TextField(
                               controller: _textController,
                               decoration: InputDecoration(
-                                hintText:
-                                    '${state.isMyChat ? 'Thor' : 'Loki'} is Speaking',
+                                hintText: '${state.isMyChat ? 'Thor' : 'Loki'}'
+                                    ' is Speaking',
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                 ),
