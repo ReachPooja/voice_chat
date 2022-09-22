@@ -12,7 +12,7 @@
         </intent>
     </queries>
    <application
-        android:label="voice_chat"
+        android:label="Voice Chat"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
