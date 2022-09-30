@@ -6,7 +6,7 @@ import 'package:voice_chat/src/chat/repository/chat/i_chat_repository.dart';
 import 'package:voice_chat/src/core/domain/failures/failures.dart';
 
 @LazySingleton(as: IChatRepository)
-class ChatRepository extends IChatRepository {
+class ChatRepository implements IChatRepository {
   static const chatBox = 'chatBox';
   @override
   Future<Either<Failure, bool>> hasData() async {
